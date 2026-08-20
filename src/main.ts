@@ -111,13 +111,16 @@ function drawFrame(s: Scrubber) {
   dx = (cw - dw) / 2
   dy = (ch - dh) / 2
 
-  s.ctx.clearRect(0, 0, cw, ch)
-  s.ctx.fillStyle = '#000'
-  s.ctx.fillRect(0, 0, cw, ch)
+  // Only decodable frames get painted. A momentarily-not-ready video (e.g.
+  // mid-seek) leaves the previous frame on screen instead of flashing black —
+  // clearing unconditionally here is what made scrubbing look like it was
+  // "breaking" whenever a seek outran decode.
+  if (s.video.readyState < 2) return
   try {
+    s.ctx.clearRect(0, 0, cw, ch)
     s.ctx.drawImage(s.video, dx, dy, dw, dh)
   } catch {
-    // frame not decodable yet — skip
+    // frame not decodable yet — leave previous frame in place
   }
 }
 
@@ -131,7 +134,7 @@ function updateScrubber(s: Scrubber) {
   const isActive = rect.top < window.innerHeight && rect.bottom > 0
   s.inner.classList.toggle('is-active', isActive)
 
-  if (s.ready && s.video.duration) {
+  if (s.ready && s.video.duration && !s.video.seeking) {
     const t = progress * (s.video.duration - 0.05)
     if (Math.abs(t - s.targetTime) > 0.01) {
       s.targetTime = t

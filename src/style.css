@@ -27,7 +27,12 @@ html, body {
   background: var(--black);
   color: var(--white);
   font-family: var(--sans);
-  overflow-x: hidden;
+  /* overflow-x: hidden here would force the UA to give overflow-y a used
+     value of auto on both html and body, creating two nested scroll
+     containers. position: sticky then resolves against the wrong one and
+     silently stops pinning. overflow-x: clip has no scroll-container side
+     effect, so it doesn't touch sticky's containing-block resolution. */
+  overflow-x: clip;
 }
 
 html.lenis, html.lenis body {

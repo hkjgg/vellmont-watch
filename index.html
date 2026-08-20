@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="VELLMONT — The Obscura. An independent Swiss watch atelier." />
+    <title>VELLMONT — The Obscura</title>
+  </head>
+  <body>
+    <div id="app">
+
+      <header class="nav">
+        <span class="nav__mark">VELLMONT</span>
+        <a class="nav__cta" href="#waitlist">Waitlist</a>
+      </header>
+
+      <main>
+
+        <!-- HERO -->
+        <section class="pin-wrap" id="hero" data-pin-height="280">
+          <div class="pin-inner">
+            <canvas class="scene-canvas" id="hero-canvas"></canvas>
+            <div class="scene-vignette"></div>
+            <div class="scene-grain"></div>
+
+            <div class="hero-copy">
+              <p class="kicker reveal-line">Independent Swiss Atelier</p>
+              <h1 class="wordmark" id="wordmark" aria-label="VELLMONT"></h1>
+              <p class="hero-tagline reveal-line">The Obscura</p>
+            </div>
+
+            <div class="scroll-cue">
+              <span></span>
+              <em>Scroll</em>
+            </div>
+          </div>
+        </section>
+
+        <!-- MACRO -->
+        <section class="pin-wrap" id="macro" data-pin-height="260">
+          <div class="pin-inner">
+            <canvas class="scene-canvas scene-canvas--contain" id="macro-canvas"></canvas>
+            <div class="scene-vignette"></div>
+            <div class="scene-grain"></div>
+
+            <div class="detail-copy">
+              <p class="detail-index">01</p>
+              <h2 class="detail-line" data-progress-in="0.08" data-progress-out="0.46">Every surface, considered.</h2>
+              <h2 class="detail-line" data-progress-in="0.50" data-progress-out="0.90">Finished by hand. Seen by few.</h2>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPLODED / SPECS -->
+        <section class="pin-wrap" id="exploded" data-pin-height="300">
+          <div class="pin-inner">
+            <canvas class="scene-canvas scene-canvas--contain" id="exploded-canvas"></canvas>
+            <div class="scene-vignette"></div>
+            <div class="scene-grain"></div>
+
+            <div class="specs">
+              <p class="kicker spec-heading">Engineering</p>
+
+              <div class="spec-row" data-progress-in="0.10">
+                <span class="spec-label">Case size</span>
+                <span class="spec-rule"></span>
+                <span class="spec-value">39<small>mm</small></span>
+              </div>
+              <div class="spec-row" data-progress-in="0.38">
+                <span class="spec-label">Power reserve</span>
+                <span class="spec-rule"></span>
+                <span class="spec-value">70<small>h</small></span>
+              </div>
+              <div class="spec-row" data-progress-in="0.66">
+                <span class="spec-label">Components</span>
+                <span class="spec-rule"></span>
+                <span class="spec-value">187</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EDITION STATEMENT -->
+        <section class="statement" id="edition">
+          <p class="kicker reveal-up">Limited Edition</p>
+          <h2 class="statement__line reveal-up">The&nbsp;Obscura</h2>
+          <p class="statement__count reveal-up">One of one hundred.</p>
+        </section>
+
+        <!-- WAITLIST -->
+        <section class="waitlist" id="waitlist">
+          <p class="kicker reveal-up">Private Waitlist</p>
+          <h2 class="waitlist__line reveal-up">Request access.</h2>
+          <form class="waitlist__form reveal-up" id="waitlist-form" autocomplete="off">
+            <input type="email" name="email" placeholder="Email address" required aria-label="Email address" />
+            <button type="submit">Request</button>
+          </form>
+          <p class="waitlist__note reveal-up" id="waitlist-note">By invitation. Production limited to one hundred pieces.</p>
+
+          <footer class="footer">
+            <span>VELLMONT</span>
+            <span>Geneva</span>
+          </footer>
+        </section>
+
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

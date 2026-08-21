@@ -1,4 +1,4 @@
-export type MaterialId = 'silver' | 'matteBlack' | 'roseGold'
+export type MaterialId = 'silver' | 'matteBlack' | 'roseGold' | 'gold'
 
 export interface MaterialPreset {
   id: MaterialId
@@ -42,9 +42,19 @@ export const MATERIAL_PRESETS: Record<MaterialId, MaterialPreset> = {
     clearcoat: 0.5,
     clearcoatRoughness: 0.2,
   },
+  gold: {
+    id: 'gold',
+    label: 'Gold',
+    swatch: '#cda43d',
+    color: '#dbb54c',
+    metalness: 1,
+    roughness: 0.16,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.12,
+  },
 }
 
-export const MATERIAL_ORDER: MaterialId[] = ['silver', 'matteBlack', 'roseGold']
+export const MATERIAL_ORDER: MaterialId[] = ['silver', 'matteBlack', 'roseGold', 'gold']
 
 /**
  * Named parts a watch.glb should expose (case-insensitive substring match against
@@ -66,4 +76,31 @@ export const EXPLODE_OFFSETS: Record<WatchPart, [number, number, number]> = {
   dial: [0, 0, 0.55],
   strap: [0, 0.6, 0],
   movement: [0, 0, -0.65],
+}
+
+/**
+ * Small tumble (radians) each part picks up as it explodes, layered on top of
+ * its translation so the teardown reads as parts peeling apart rather than
+ * sliding on rails. Strap top/bottom flip sign (see resolveRotateOffset) so
+ * the two halves hinge outward from the case instead of spinning in parallel.
+ */
+export const ROTATE_OFFSETS: Record<WatchPart, [number, number, number]> = {
+  case: [0, 0, 0],
+  dial: [0.1, 0.16, 0],
+  movement: [-0.14, -0.1, 0.05],
+  strap: [0.22, 0, 0.04],
+}
+
+/**
+ * Where in the shared 0→1 explode progress each part starts moving, so the
+ * teardown stages front-to-back — dial lifts first, then the movement drops
+ * out behind it, then the strap peels away last — instead of every part
+ * launching at once. Each part's own motion is then renormalized across its
+ * remaining span (see useWatchRig), so it still finishes exactly at explode=1.
+ */
+export const EXPLODE_STAGGER: Record<WatchPart, number> = {
+  case: 0,
+  dial: 0,
+  movement: 0.18,
+  strap: 0.36,
 }

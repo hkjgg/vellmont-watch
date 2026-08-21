@@ -8,28 +8,28 @@ const MACRO_PARTS = [
     title: 'Case',
     copy: 'Cold-forged 316L steel, brushed and polished by hand across eleven separate passes.',
     fallbackClass: 'macro-fallback--case',
-    src: '/media/macro-case.jpg',
+    src: '/assets/macro/case.jpg',
   },
   {
     index: '02',
     title: 'Dial',
     copy: 'Sunburst finish, applied indices set individually beneath the crystal.',
     fallbackClass: 'macro-fallback--dial',
-    src: '/media/macro-dial.jpg',
+    src: '/assets/macro/dial.jpg',
   },
   {
     index: '03',
     title: 'Movement',
     copy: 'In-house automatic calibre, 187 components, decorated and regulated to chronometer tolerance.',
     fallbackClass: 'macro-fallback--movement',
-    src: '/media/macro-movement.jpg',
+    src: '/assets/macro/movement.jpg',
   },
   {
     index: '04',
     title: 'Strap',
     copy: 'Vegetable-tanned leather, hand-stitched with a tapered profile at the lugs.',
     fallbackClass: 'macro-fallback--strap',
-    src: '/media/macro-strap.jpg',
+    src: '/assets/macro/strap.jpg',
   },
 ]
 
@@ -54,15 +54,15 @@ export default function MediaShowcase() {
 
         <div className="mb-16 grid grid-cols-1 gap-5 sm:mb-24 md:grid-cols-2">
           <AmbientVideo
-            src="/media/atelier.mp4"
-            poster="/media/atelier-poster.jpg"
+            src="/assets/ambient/atelier.mp4"
+            poster="/assets/ambient/atelier-poster.jpg"
             kicker="The Workshop"
             title="Where the Obscura is made"
             copy="Every case leaves the bench under the same loupe it was born under."
           />
           <AmbientVideo
-            src="/media/on-the-wrist.mp4"
-            poster="/media/on-the-wrist-poster.jpg"
+            src="/assets/ambient/on-the-wrist.mp4"
+            poster="/assets/ambient/on-the-wrist-poster.jpg"
             kicker="On the Wrist"
             title="A quiet second hand"
             copy="187 components moving in silence, felt more than heard."

@@ -40,6 +40,7 @@ export default function ProductShowcase() {
       const isIn = progress >= part.revealAt
       el.style.opacity = isIn ? '1' : '0'
       el.style.transform = isIn ? 'translateY(0)' : 'translateY(10px)'
+      el.style.filter = isIn ? 'blur(0px)' : 'blur(6px)'
     }
   }, [])
 
@@ -71,7 +72,7 @@ export default function ProductShowcase() {
             ref={(el) => {
               labelRefs.current[part.key] = el
             }}
-            className={`pointer-events-none absolute z-10 max-w-[220px] opacity-0 transition-[opacity,transform] duration-700 ease-out ${part.className}`}
+            className={`pointer-events-none absolute z-10 max-w-[220px] opacity-0 transition-[opacity,transform,filter] duration-700 ease-out ${part.className}`}
           >
             <p className="mb-1 font-mono text-[10px] tracking-[0.25em] text-graphite">{part.index}</p>
             <p className="font-serif-display text-xl italic text-bone/90">{part.title}</p>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 interface AmbientVideoProps {
-  /** Path under public/, e.g. "/media/atelier.mp4". See public/media/README.md. */
+  /** Path under public/, e.g. "/assets/ambient/atelier.mp4". See public/assets/README.md. */
   src?: string
   poster?: string
   kicker: string
@@ -11,29 +11,33 @@ interface AmbientVideoProps {
 }
 
 /**
- * Full-bleed looping ambient video panel. Falls back to a CSS gradient wash
- * (.ambient-fallback) when no source is given, or if the clip fails to load —
- * the section stays visually complete before real footage is dropped in.
+ * Full-bleed looping ambient video panel. The gradient wash (.ambient-fallback)
+ * is always the base layer — showing immediately, through the load, and
+ * permanently on failure — with the clip crossfading in on top once it
+ * actually has a frame ready, so there's never a black flash while it loads.
  */
 export default function AmbientVideo({ src, poster, kicker, title, copy, className = '' }: AmbientVideoProps) {
+  const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
-  const showVideo = Boolean(src) && !failed
+  const showVideo = Boolean(src) && loaded && !failed
 
   return (
     <div className={`group relative aspect-[4/5] overflow-hidden rounded-sm sm:aspect-[16/10] ${className}`}>
-      {showVideo ? (
+      <div className="ambient-fallback absolute inset-0 transition-transform duration-[1.4s] ease-out group-hover:scale-105" />
+      {src && !failed && (
         <video
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-105"
+          className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[1.4s] ease-out group-hover:scale-105 ${
+            showVideo ? 'opacity-100' : 'opacity-0'
+          }`}
           src={src}
           poster={poster}
           autoPlay
           muted
           loop
           playsInline
+          onLoadedData={() => setLoaded(true)}
           onError={() => setFailed(true)}
         />
-      ) : (
-        <div className="ambient-fallback absolute inset-0 transition-transform duration-[1.4s] ease-out group-hover:scale-105" />
       )}
 
       <div className="vignette-overlay" />

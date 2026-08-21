@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion'
 
+// Same soft focus-in language as the Hero wordmark (blur + rise), so every
+// section transition reads as one consistent motion signature.
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    filter: 'blur(0px)',
     transition: { duration: 0.9, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as const },
   }),
 }

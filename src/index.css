@@ -178,6 +178,15 @@ body {
   z-index: 9999;
   pointer-events: none;
   will-change: transform;
+  /* Hidden until MagneticCursor's effect confirms a hover-capable pointer and
+     stamps .cursor-active on <html> — otherwise, on touch devices (where that
+     effect never runs), the ring+dot sit stranded at their default (0,0)
+     position instead of tracking a cursor that doesn't exist. */
+  opacity: 0;
+}
+
+.cursor-active .magnetic-cursor {
+  opacity: 1;
 }
 
 .magnetic-cursor__ring {

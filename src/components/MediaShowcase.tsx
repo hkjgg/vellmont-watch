@@ -41,8 +41,8 @@ export default function MediaShowcase() {
       <div className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10">
         <motion.div
           className="mb-14 max-w-2xl sm:mb-20"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >

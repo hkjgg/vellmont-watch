@@ -12,11 +12,14 @@ interface PartLabel {
   className: string
 }
 
+// revealAt is tuned against EXPLODE_STAGGER + the smoothstep easing in
+// useScrollWatch, so each label lands just as its part visibly starts moving —
+// case first (the anchor), then dial, movement, strap, matching the teardown order.
 const PART_LABELS: PartLabel[] = [
   { key: 'case', title: 'Case', index: '01', revealAt: 0.06, className: 'left-[8%] top-[46%]' },
-  { key: 'dial', title: 'Dial', index: '02', revealAt: 0.42, className: 'right-[10%] top-[30%]' },
-  { key: 'movement', title: 'Movement', index: '03', revealAt: 0.6, className: 'right-[8%] bottom-[26%]' },
-  { key: 'strap', title: 'Strap', index: '04', revealAt: 0.78, className: 'left-[9%] bottom-[20%]' },
+  { key: 'dial', title: 'Dial', index: '02', revealAt: 0.46, className: 'right-[10%] top-[30%]' },
+  { key: 'movement', title: 'Movement', index: '03', revealAt: 0.54, className: 'right-[8%] bottom-[26%]' },
+  { key: 'strap', title: 'Strap', index: '04', revealAt: 0.64, className: 'left-[9%] bottom-[20%]' },
 ]
 
 export default function ProductShowcase() {
@@ -37,6 +40,7 @@ export default function ProductShowcase() {
       const isIn = progress >= part.revealAt
       el.style.opacity = isIn ? '1' : '0'
       el.style.transform = isIn ? 'translateY(0)' : 'translateY(10px)'
+      el.style.filter = isIn ? 'blur(0px)' : 'blur(6px)'
     }
   }, [])
 
@@ -68,7 +72,7 @@ export default function ProductShowcase() {
             ref={(el) => {
               labelRefs.current[part.key] = el
             }}
-            className={`pointer-events-none absolute z-10 max-w-[220px] opacity-0 transition-[opacity,transform] duration-700 ease-out ${part.className}`}
+            className={`pointer-events-none absolute z-10 max-w-[220px] opacity-0 transition-[opacity,transform,filter] duration-700 ease-out ${part.className}`}
           >
             <p className="mb-1 font-mono text-[10px] tracking-[0.25em] text-graphite">{part.index}</p>
             <p className="font-serif-display text-xl italic text-bone/90">{part.title}</p>

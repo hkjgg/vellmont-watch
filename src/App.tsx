@@ -4,8 +4,10 @@ import { gsap, ScrollTrigger } from './lib/gsap'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import ProductShowcase from './components/ProductShowcase'
+import MediaShowcase from './components/MediaShowcase'
 import Statement from './components/Statement'
 import Waitlist from './components/Waitlist'
+import MagneticCursor from './components/MagneticCursor'
 
 export default function App() {
   useEffect(() => {
@@ -33,10 +35,12 @@ export default function App() {
 
   return (
     <div className="relative bg-obsidian">
+      <MagneticCursor />
       <Nav />
       <main>
         <Hero />
         <ProductShowcase />
+        <MediaShowcase />
         <Statement />
         <Waitlist />
       </main>

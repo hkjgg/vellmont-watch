@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { MATERIAL_ORDER, MATERIAL_PRESETS, type MaterialId } from './scene/materials'
+import { playTick } from '../lib/sound'
 
 interface MaterialSwitcherProps {
   active: MaterialId
@@ -8,6 +10,17 @@ interface MaterialSwitcherProps {
 }
 
 export default function MaterialSwitcher({ active, onChange, className = '' }: MaterialSwitcherProps) {
+  // Keyed by a fresh timestamp on every click (even reselecting the same
+  // swatch) so the ripple element remounts and replays its animation
+  // instead of only firing the first time a swatch becomes active.
+  const [pulse, setPulse] = useState<{ id: MaterialId; key: number } | null>(null)
+
+  function handleSelect(id: MaterialId) {
+    if (id !== active) playTick()
+    setPulse({ id, key: Date.now() })
+    onChange(id)
+  }
+
   return (
     <div className={`flex items-center gap-3 sm:gap-4 ${className}`}>
       {MATERIAL_ORDER.map((id) => {
@@ -17,7 +30,7 @@ export default function MaterialSwitcher({ active, onChange, className = '' }: M
           <motion.button
             key={id}
             type="button"
-            onClick={() => onChange(id)}
+            onClick={() => handleSelect(id)}
             className="group flex flex-col items-center gap-2.5 outline-none"
             whileTap={{ scale: 0.92 }}
             aria-pressed={isActive}
@@ -33,7 +46,18 @@ export default function MaterialSwitcher({ active, onChange, className = '' }: M
               }}
               whileHover={{ scale: isActive ? 1.08 : 1.04 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            />
+            >
+              {pulse?.id === id && (
+                <motion.span
+                  key={pulse.key}
+                  className="pointer-events-none absolute inset-0 rounded-full"
+                  style={{ border: `1px solid ${preset.swatch}` }}
+                  initial={{ scale: 1, opacity: 0.7 }}
+                  animate={{ scale: 1.9, opacity: 0 }}
+                  transition={{ duration: 0.55, ease: 'easeOut' }}
+                />
+              )}
+            </motion.span>
             <span
               className={`kicker !text-[10px] transition-colors duration-300 ${
                 isActive ? 'text-bone' : 'text-mist group-hover:text-bone/70'

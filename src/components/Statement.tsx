@@ -11,37 +11,40 @@ const fadeUp = {
 
 export default function Statement() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-obsidian px-6 py-24 text-center">
-      <motion.p
-        className="kicker"
-        custom={0}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.6 }}
-        variants={fadeUp}
-      >
-        Limited Edition
-      </motion.p>
-      <motion.h2
-        className="font-serif-display text-[clamp(42px,8vw,108px)] font-normal text-bone"
-        custom={1}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.6 }}
-        variants={fadeUp}
-      >
-        The Obscura
-      </motion.h2>
-      <motion.p
-        className="text-[13px] tracking-[0.2em] text-mist uppercase"
-        custom={2}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.6 }}
-        variants={fadeUp}
-      >
-        One of one hundred.
-      </motion.p>
+    <section className="relative flex min-h-screen flex-col items-center justify-center bg-obsidian px-6 py-24 text-center">
+      <div className="grain-overlay" />
+      <div className="relative z-10 flex flex-col items-center gap-6">
+        <motion.p
+          className="kicker"
+          custom={0}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.6 }}
+          variants={fadeUp}
+        >
+          Limited Edition
+        </motion.p>
+        <motion.h2
+          className="font-serif-display text-[clamp(42px,8vw,108px)] font-normal text-bone"
+          custom={1}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.6 }}
+          variants={fadeUp}
+        >
+          The Obscura
+        </motion.h2>
+        <motion.p
+          className="text-[13px] tracking-[0.2em] text-mist uppercase"
+          custom={2}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.6 }}
+          variants={fadeUp}
+        >
+          One of one hundred.
+        </motion.p>
+      </div>
     </section>
   )
 }

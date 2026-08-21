@@ -1,4 +1,4 @@
-export type MaterialId = 'silver' | 'matteBlack' | 'roseGold' | 'gold'
+export type MaterialId = 'silverSteel' | 'deepBlack' | 'pureGold' | 'roseGold'
 
 export interface MaterialPreset {
   id: MaterialId
@@ -11,10 +11,13 @@ export interface MaterialPreset {
   clearcoatRoughness: number
 }
 
+/** Case + bracelet finish — the one thing SWAP cycles. Everything inside the
+ *  movement (dial, tourbillon, mainplate, barrel, baseplate, weight) keeps
+ *  its own fixed mechanical materials regardless of the exterior finish. */
 export const MATERIAL_PRESETS: Record<MaterialId, MaterialPreset> = {
-  silver: {
-    id: 'silver',
-    label: 'Silver',
+  silverSteel: {
+    id: 'silverSteel',
+    label: 'Silver Steel',
     swatch: '#c8ccd2',
     color: '#d3d6db',
     metalness: 1,
@@ -22,15 +25,25 @@ export const MATERIAL_PRESETS: Record<MaterialId, MaterialPreset> = {
     clearcoat: 0.6,
     clearcoatRoughness: 0.15,
   },
-  matteBlack: {
-    id: 'matteBlack',
-    label: 'Matte Black',
+  deepBlack: {
+    id: 'deepBlack',
+    label: 'Deep Black',
     swatch: '#1c1c1e',
-    color: '#26262a',
+    color: '#232326',
     metalness: 0.85,
-    roughness: 0.55,
-    clearcoat: 0.1,
-    clearcoatRoughness: 0.4,
+    roughness: 0.5,
+    clearcoat: 0.15,
+    clearcoatRoughness: 0.35,
+  },
+  pureGold: {
+    id: 'pureGold',
+    label: 'Pure Gold',
+    swatch: '#cda43d',
+    color: '#dbb54c',
+    metalness: 1,
+    roughness: 0.16,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.12,
   },
   roseGold: {
     id: 'roseGold',
@@ -42,65 +55,67 @@ export const MATERIAL_PRESETS: Record<MaterialId, MaterialPreset> = {
     clearcoat: 0.5,
     clearcoatRoughness: 0.2,
   },
-  gold: {
-    id: 'gold',
-    label: 'Gold',
-    swatch: '#cda43d',
-    color: '#dbb54c',
-    metalness: 1,
-    roughness: 0.16,
-    clearcoat: 0.55,
-    clearcoatRoughness: 0.12,
-  },
 }
 
-export const MATERIAL_ORDER: MaterialId[] = ['silver', 'matteBlack', 'roseGold', 'gold']
+export const MATERIAL_ORDER: MaterialId[] = ['silverSteel', 'deepBlack', 'pureGold', 'roseGold']
 
 /**
- * Named parts a watch.glb should expose (case-insensitive substring match against
- * node names) so the exploded scroll view and material switcher can target them.
- * The procedural fallback watch uses these exact names.
+ * The six movement components the Horizontal Exploded Assembly separates,
+ * matching a real automatic-tourbillon layer stack: dial (front) → tourbillon
+ * (the visible complication) → mainplate (structural anchor the movement is
+ * built around) → barrel (mainspring) → baseplate (rear structural plate) →
+ * weight (the oscillating winding rotor, at the very back).
  */
-export type WatchPart = 'case' | 'dial' | 'strap' | 'movement'
+export type MovementPart = 'dial' | 'tourbillon' | 'mainplate' | 'barrel' | 'baseplate' | 'weight'
 
-export const WATCH_PART_KEYWORDS: Record<WatchPart, string[]> = {
-  case: ['case', 'bezel', 'crown', 'crystal', 'body'],
-  dial: ['dial', 'face', 'hand'],
-  strap: ['strap', 'band', 'bracelet'],
-  movement: ['movement', 'gear', 'rotor', 'mechanism'],
+export const MOVEMENT_PART_ORDER: MovementPart[] = [
+  'weight',
+  'baseplate',
+  'barrel',
+  'mainplate',
+  'tourbillon',
+  'dial',
+]
+
+export const MOVEMENT_PART_LABELS: Record<MovementPart, { title: string; copy: string }> = {
+  dial: { title: 'Dial', copy: 'The face — sunburst finish, applied indices set by hand.' },
+  tourbillon: { title: 'Tourbillon', copy: 'A rotating cage that cancels gravity’s pull on the escapement.' },
+  mainplate: { title: 'Mainplate', copy: 'The structural anchor every other layer is built around.' },
+  barrel: { title: 'Barrel', copy: 'Houses the mainspring — the movement’s stored energy.' },
+  baseplate: { title: 'Baseplate', copy: 'The rear structural plate, closing the movement from behind.' },
+  weight: { title: 'Weight', copy: 'The oscillating rotor that winds the mainspring as you move.' },
 }
 
-/** Outward explode direction (local space, unit-ish) and distance per part. */
-export const EXPLODE_OFFSETS: Record<WatchPart, [number, number, number]> = {
-  case: [0, 0, 0],
-  dial: [0, 0, 0.55],
-  strap: [0, 0.6, 0],
-  movement: [0, 0, -0.65],
+/** X-axis position (world units) each part fans out to at full explode.
+ *  Mainplate is the anchor (0) — everything else spreads from it, matching
+ *  MOVEMENT_PART_ORDER's left-to-right reading. */
+export const MOVEMENT_EXPLODE_X: Record<MovementPart, number> = {
+  weight: -2.0,
+  baseplate: -1.2,
+  barrel: -0.4,
+  mainplate: 0,
+  tourbillon: 0.8,
+  dial: 1.6,
 }
 
-/**
- * Small tumble (radians) each part picks up as it explodes, layered on top of
- * its translation so the teardown reads as parts peeling apart rather than
- * sliding on rails. Strap top/bottom flip sign (see resolveRotateOffset) so
- * the two halves hinge outward from the case instead of spinning in parallel.
- */
-export const ROTATE_OFFSETS: Record<WatchPart, [number, number, number]> = {
-  case: [0, 0, 0],
-  dial: [0.1, 0.16, 0],
-  movement: [-0.14, -0.1, 0.05],
-  strap: [0.22, 0, 0.04],
+/** Small tumble (radians, Y-axis) each part picks up as it separates, so the
+ *  fan reads as parts peeling apart rather than sliding on rails. */
+export const MOVEMENT_ROTATE_Y: Record<MovementPart, number> = {
+  weight: -0.22,
+  baseplate: -0.12,
+  barrel: 0.08,
+  mainplate: 0,
+  tourbillon: 0.14,
+  dial: 0.24,
 }
 
-/**
- * Where in the shared 0→1 explode progress each part starts moving, so the
- * teardown stages front-to-back — dial lifts first, then the movement drops
- * out behind it, then the strap peels away last — instead of every part
- * launching at once. Each part's own motion is then renormalized across its
- * remaining span (see useWatchRig), so it still finishes exactly at explode=1.
- */
-export const EXPLODE_STAGGER: Record<WatchPart, number> = {
-  case: 0,
-  dial: 0,
-  movement: 0.18,
-  strap: 0.36,
+/** Where in the shared 0→1 explode progress each part starts moving — the
+ *  stack separates from the outside in, mainplate (the anchor) never moving. */
+export const MOVEMENT_EXPLODE_STAGGER: Record<MovementPart, number> = {
+  mainplate: 0,
+  barrel: 0.08,
+  tourbillon: 0.08,
+  baseplate: 0.22,
+  weight: 0.36,
+  dial: 0.36,
 }

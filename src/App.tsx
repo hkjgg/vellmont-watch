@@ -1,15 +1,26 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Lenis from 'lenis'
 import { gsap, ScrollTrigger } from './lib/gsap'
+import { lenisRef } from './lib/lenisInstance'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
-import ProductShowcase from './components/ProductShowcase'
+import HorizontalExplode from './components/HorizontalExplode'
+import ParticleTransition from './components/ParticleTransition'
+import MacroZoom from './components/MacroZoom'
+import Lineup from './components/Lineup'
 import MediaShowcase from './components/MediaShowcase'
 import Statement from './components/Statement'
 import Waitlist from './components/Waitlist'
 import MagneticCursor from './components/MagneticCursor'
+import type { MaterialId } from './components/scene/materials'
 
 export default function App() {
+  // Shared across the whole re-architected experience: the finish chosen in
+  // the Hero (via SWAP) or the Lineup persists through every section between
+  // them, so the case/bracelet you picked is still what you see in the
+  // Macro Zoom's "Slim Profile" and "Bracelet" close-ups.
+  const [activeMaterial, setActiveMaterial] = useState<MaterialId>('silverSteel')
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.15,
@@ -18,6 +29,7 @@ export default function App() {
       wheelMultiplier: 1,
       touchMultiplier: 1.4,
     })
+    lenisRef.current = lenis
 
     // Keep ScrollTrigger's scroll position in sync with Lenis's smoothed scroll,
     // and drive Lenis from GSAP's ticker so both share one rAF loop.
@@ -29,6 +41,7 @@ export default function App() {
     return () => {
       gsap.ticker.remove(tick)
       lenis.destroy()
+      lenisRef.current = null
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
   }, [])
@@ -38,8 +51,11 @@ export default function App() {
       <MagneticCursor />
       <Nav />
       <main>
-        <Hero />
-        <ProductShowcase />
+        <Hero activeMaterial={activeMaterial} onMaterialChange={setActiveMaterial} />
+        <HorizontalExplode activeMaterial={activeMaterial} />
+        <ParticleTransition activeMaterial={activeMaterial} />
+        <MacroZoom activeMaterial={activeMaterial} />
+        <Lineup activeMaterial={activeMaterial} onSelect={setActiveMaterial} />
         <MediaShowcase />
         <Statement />
         <Waitlist />

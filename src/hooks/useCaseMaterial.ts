@@ -4,8 +4,9 @@ import { gsap } from '../lib/gsap'
 import { MATERIAL_PRESETS, type MaterialId } from '../components/scene/materials'
 
 /**
- * Smoothly tweens every registered case material (silver/matte-black/rose-gold
- * are all case finishes) toward the active preset whenever it changes.
+ * Smoothly tweens every registered case/bracelet material (Silver Steel,
+ * Deep Black, Pure Gold, Rose Gold) toward the active preset whenever it
+ * changes.
  */
 export function useCaseMaterial(
   materialsRef: RefObject<THREE.MeshStandardMaterial[]>,

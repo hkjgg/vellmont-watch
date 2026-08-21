@@ -2,20 +2,22 @@ import { useFrame } from '@react-three/fiber'
 import { useRef, type RefObject } from 'react'
 import * as THREE from 'three'
 import { resolveExplodeOffset, resolveRotateOffset, resolveStaggeredProgress } from '../components/scene/explode'
-import type { WatchPart } from '../components/scene/materials'
+import type { MovementPart } from '../components/scene/materials'
 
 export interface ScrollState {
   /** Target rotation, radians. */
   rotation: number
   /** Target explode amount, 0 (assembled) → 1 (fully disassembled). */
   explode: number
+  /** Target case/crystal/bracelet opacity, 1 (assembled watch) → 0 (bare
+   *  movement, for the Horizontal Exploded Assembly). Sections that never
+   *  hide the case just leave this at 1. */
+  caseOpacity: number
 }
 
 export interface WatchRigEntry {
   ref: RefObject<THREE.Object3D | null>
-  part: WatchPart
-  /** Used only to disambiguate opposing offsets, e.g. the two strap halves. */
-  nameHint?: string
+  part: MovementPart
 }
 
 interface Baseline {
@@ -25,11 +27,8 @@ interface Baseline {
 
 /**
  * Drives the shared "rotate on scroll, explode into parts on scroll" behaviour
- * for both the procedural placeholder watch and any real loaded watch.glb —
- * both feed this the same shape of data (a root group + a list of named parts).
- *
- * Each part's progress through the explode is staggered (see EXPLODE_STAGGER)
- * so the teardown reads as a sequence — dial first, movement, then strap —
+ * for the movement model. Each part's progress through the explode is
+ * staggered (see MOVEMENT_EXPLODE_STAGGER) so the stack separates outside-in
  * rather than every part launching at once, and each part picks up a small
  * tumble as it moves so it reads as peeling apart rather than sliding on rails.
  */
@@ -62,17 +61,16 @@ export function useWatchRig(
         baseline.current.set(obj, base)
       }
 
-      const name = entry.nameHint ?? obj.name
       const progress = resolveStaggeredProgress(explodeDamped.current, entry.part)
 
-      const dir = resolveExplodeOffset(name, entry.part)
+      const dir = resolveExplodeOffset(entry.part)
       obj.position.set(
         base.position.x + dir.x * explodeDistance * progress,
         base.position.y + dir.y * explodeDistance * progress,
         base.position.z + dir.z * explodeDistance * progress,
       )
 
-      const tumble = resolveRotateOffset(name, entry.part)
+      const tumble = resolveRotateOffset(entry.part)
       obj.rotation.set(
         base.rotation.x + tumble.x * progress,
         base.rotation.y + tumble.y * progress,

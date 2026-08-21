@@ -23,27 +23,28 @@ Portrait, 4:5 aspect (currently 640×800 placeholders):
 | `movement.jpg` | Movement  |
 | `strap.jpg`    | Strap     |
 
-Same case/dial/movement/strap vocabulary as the 3D exploded view (see
-`public/models/README.md`).
+Same case/dial/movement/strap vocabulary as the 3D exploded assembly (see
+`src/components/scene/materials.ts`) — the watch itself is procedural
+(`src/components/scene/MovementModel.tsx`), not a loaded model file, so
+there's no `public/models/` directory to cross-reference anymore.
 
 ## `public/assets/ambient/` — cinematic video panels (`AmbientVideo`)
 
-16:10 aspect. Keep clips short and loop-friendly (5–15s, first/last frame
-close enough to cut cleanly), muted (they autoplay muted+looped) and modest
-in size (a few MB) since they load eagerly with the section. An .mp4/H.264
-is the safest baseline for autoplay across browsers.
+16:10 aspect (960×600 placeholders). Keep clips short and loop-friendly
+(5–15s, first/last frame close enough to cut cleanly), muted (they autoplay
+muted+looped) and modest in size (a few MB) since they load eagerly with the
+section. An .mp4/H.264 is the safest baseline for autoplay across browsers.
 
 | File                       | Used for              | Status                |
 | --------------------------- | ---------------------- | --------------------- |
-| `atelier.mp4`                | "The Workshop" panel   | **not included** — see below |
+| `atelier.mp4`                | "The Workshop" panel   | placeholder present   |
 | `atelier-poster.jpg`         | its poster frame       | placeholder present   |
-| `on-the-wrist.mp4`           | "On the Wrist" panel   | **not included** — see below |
+| `on-the-wrist.mp4`           | "On the Wrist" panel   | placeholder present   |
 | `on-the-wrist-poster.jpg`    | its poster frame       | placeholder present   |
 
-**The two `.mp4` files aren't here.** Generating even a minimal placeholder
-clip needs a video encoder (ffmpeg or similar), which isn't available in
-this environment and wasn't worth pulling in — its dependency tree runs to
-~150 packages just to produce two silent stub clips. Everything else about
-the pipeline is ready: drop real footage in at those two paths and the
+The two `.mp4` placeholders are procedurally generated (ffmpeg `geq`, no
+external footage) — an 8s, exact-loop diagonal-stripe pattern at 960×600,
+~95KB each, matching the same "deliberately obvious" placeholder language as
+the macro stills above. Drop real footage in at those two paths and the
 panels switch from the CSS gradient fallback to actual video, no other
 changes required.
